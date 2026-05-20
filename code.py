@@ -256,7 +256,12 @@ with col4:
                 lap_duration = current_total - st.session_state.last_lap_elapsed
                 st.session_state.last_lap_elapsed = current_total
                 lap_num = len(st.session_state.laps) + 1
-                st.session_state.laps.insert(0, {"num": lap_num, "duration": format_time(lap_duration), "total": format_time(current_total)})
+                st.session_state.laps.insert(0, {
+                    "num": lap_num, 
+                    "duration": format_time(lap_duration), 
+                    "total": format_time(current_total)
+                })
+                st.rerun()  # 👈 Added this to force the UI to display the new lap instantly!
 
 with col5:
     if st.button("🥀 Reset"):
