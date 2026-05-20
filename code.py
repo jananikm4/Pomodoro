@@ -1,22 +1,25 @@
 import streamlit as st
 import time
 
-# --- INITIAL PERSISTENT STATE MANAGEMENT ---
+# --- STATE CONFIGURATION ---
 if "start_time" not in st.session_state: st.session_state.start_time = None
 if "running" not in st.session_state: st.session_state.running = False
 if "elapsed_time" not in st.session_state: st.session_state.elapsed_time = 0
 if "total_study_time" not in st.session_state: st.session_state.total_study_time = 0
-if "laps" not in st.session_state: st.session_state.laps = []
-if "last_lap_elapsed" not in st.session_state: st.session_state.last_lap_elapsed = 0
 if "break_mode" not in st.session_state: st.session_state.break_mode = False
 if "break_end_time" not in st.session_state: st.session_state.break_end_time = None
+if "current_target" not in st.session_state: st.session_state.current_target = ""
 
 def format_time(seconds_count):
     hours, remainder = divmod(int(seconds_count), 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
-# Dynamic Tab Streaming Header Computation
+# Update text state immediately when the user changes it
+def update_target():
+    st.session_state.current_target = st.session_state.target_input_field
+
+# Dynamic Tab Streaming Header
 tab_title = "Study ritual"
 if st.session_state.running:
     if st.session_state.break_mode and st.session_state.break_end_time:
@@ -26,12 +29,16 @@ if st.session_state.running:
         active_delta = (time.time() - st.session_state.start_time) if st.session_state.start_time else 0
         tab_title = f"({format_time(active_delta)}) Focus State"
 
-# --- PAGE CONFIGURATION ---
 st.set_page_config(page_title=tab_title, page_icon="🥀", layout="centered")
 
-# --- THEME REGISTRY ---
+# --- CUSTOM PALETTE REGISTRY ---
 THEMES = {
-    "🥀 Persephone's Descent": {"bg": "#140B0B", "card": "#471417", "text": "#CD9454", "accent": "#A22737", "muted": "#660611"},
+    "🌌 Periwinkle Dream": {
+        "bg": "#A2A6F2", "card": "#7D82E6", "text": "#E8ECFA", "accent": "#F28627", "muted": "#B5B8F5"
+    },
+    "🎨 Fruit Punch Orchard": {
+        "bg": "#C1809A", "card": "#DF0F57", "text": "#EABF28", "accent": "#EF8000", "muted": "#AACCCC"
+    },
     "🌿 Botanical Solace": {"bg": "#043323", "card": "#105666", "text": "#F7F4D5", "accent": "#839050", "muted": "#039680"},
     "🏺 Gilded Bistre": {"bg": "#210100", "card": "#814436", "text": "#FECE79", "accent": "#E64341", "muted": "#8C0902"},
     "🔮 Cyber Orchid": {"bg": "#3D1472", "card": "#3333AF", "text": "#FA8EE4", "accent": "#9896FF", "muted": "#B744B5"},
@@ -39,7 +46,7 @@ THEMES = {
     "🦩 Poolside Barbie": {"bg": "#227E9D", "card": "#51ACC5", "text": "#FDF9FA", "accent": "#FDA9CC", "muted": "#FD50A4"},
     "☀️ Sun-Drenched Apricot": {"bg": "#FA9058", "card": "#FECC64", "text": "#FFF6E8", "accent": "#FCEABC", "muted": "#B5D8FF"},
     "🍁 Autumnal Alchemy": {"bg": "#13260F", "card": "#344F30", "text": "#FDD973", "accent": "#F47230", "muted": "#9F350B"},
-    "🌊 Navagio Coastline": {"bg": "#3F9CB0", "card": "#58DEE1", "text": "#FFD6C7", "accent": "#EB8629", "muted": "#DC4A44"},
+    "⛈️ Navagio Coastline": {"bg": "#3F9CB0", "card": "#58DEE1", "text": "#FFD6C7", "accent": "#EB8629", "muted": "#DC4A44"},
     "⚡ Neon Pulse": {"bg": "#231F20", "card": "#0AA9E0", "text": "#7BF004", "accent": "#FC05B8", "muted": "#FA6B05"},
     "🌸 Pastel Dreamcicle": {"bg": "#594EAD", "card": "#5A9AD6", "text": "#F99E85", "accent": "#F4607B", "muted": "#78C681"},
     "🪵 Desert Saddle": {"bg": "#957443", "card": "#1FB189", "text": "#CCCCAC", "accent": "#EC321F", "muted": "#E7ABC7"},
@@ -58,7 +65,7 @@ with st.sidebar:
 
 active_theme = THEMES[selected_theme_name]
 
-# --- RESTRUCTURED HIGH-CONTRAST CENTRIC CSS ---
+# --- DESIGN INJECTIONS ---
 st.markdown(f"""
     <style>
     .stApp {{
@@ -111,11 +118,11 @@ st.markdown(f"""
     }}
     .stButton>button {{
         background-color: {active_theme['card']} !important;
-        color: {active_theme['accent']} !important;
+        color: {active_theme['text']} !important;
         border: 1px solid {active_theme['accent']}66 !important;
         border-radius: 24px !important;
         padding: 0.5rem 1rem !important;
-        font-weight: 400 !important;
+        font-weight: 500 !important;
         font-size: 13px;
         letter-spacing: 0.5px;
         transition: all 0.2s ease;
@@ -155,19 +162,6 @@ st.markdown(f"""
         margin: 0 auto 25px auto;
         max-width: 580px;
     }}
-    .lap-board {{
-        max-width: 580px;
-        margin: 30px auto;
-    }}
-    .lap-row {{
-        background-color: {active_theme['card']}40;
-        border-bottom: 1px solid {active_theme['accent']}11;
-        padding: 10px 16px;
-        display: flex;
-        justify-content: space-between;
-        font-size: 14px;
-        color: {active_theme['text']};
-    }}
     .break-banner {{
         background-color: {active_theme['accent']};
         color: {active_theme['bg']};
@@ -179,27 +173,28 @@ st.markdown(f"""
         letter-spacing: 1px;
         font-size: 12px;
     }}
-    /* Clean overrides for text area input contrast */
     div[data-testid="stTextArea"] textarea {{
-        background-color: #0c070788 !important;
+        background-color: #0c0707c2 !important;
         color: #FFFFFF !important;
-        border: 1px solid {active_theme['accent']}44 !important;
+        border: 1px solid {active_theme['accent']}66 !important;
+        font-size: 15px !important;
+    }}
+    div[data-testid="stTextArea"] textarea:focus {{
+        border-color: {active_theme['accent']} !important;
+        box-shadow: 0 0 10px {active_theme['accent']}44 !important;
     }}
     </style>
 """, unsafe_allow_html=True)
 
-# --- MOTIVATIONAL ENGINE ARCHIVES ---
+# --- ENGINE DATA ARCHIVES ---
 MOTIVATIONAL_QUOTES = [
     "“The most effective way to do it, is to do it.” — Amelia Earhart",
     "“I never dreamed about success. I worked for it.” — Estée Lauder",
     "“Define success on your own terms, achieve it by your own rules.” — Anne Sweeney",
-    "“I'm not intimidating, you're intimidated. There's a difference.” — Issa Rae",
     "“You can waste your lives drawing lines. Or you can live your life crossing them.” — Shonda Rhimes",
     "“Think like a queen. A queen is not afraid to fail.” — Oprah Winfrey",
-    "“If you don't risk anything, you risk even more.” — Erica Jong",
     "“Done is better than perfect.” — Sheryl Sandberg",
-    "“If they don't give you a seat at the table, bring a folding chair.” — Shirley Chisholm",
-    "“Be messy and complicated and afraid and show up anyway.” — Glennon Doyle"
+    "“If they don't give you a seat at the table, bring a folding chair.” — Shirley Chisholm"
 ]
 
 BREAK_ACTIVITIES = [
@@ -208,28 +203,25 @@ BREAK_ACTIVITIES = [
     "🎨 Doodle your thoughts on scrap paper",
     "✨ Work on making your study notes aesthetic",
     "🧊 get some ice water",
-    "🧘‍♀️ Lie on the floor and stare at the ceiling",
     "☕ Step away and fix yourself a warm cup of matcha or herbal tea."
 ]
 
-# --- APP INTERFACE (CENTERED VISUAL TARGETING) ---
+# --- APP INTERFACE ---
 st.markdown("<h1 class='main-title'>🥀 Study ritual.</h1>", unsafe_allow_html=True)
 st.markdown("<p class='sub-lyrics'>I ain't never had a doubt inside me • And if I ever told you that I did, I'm fuckin' lyin'</p>", unsafe_allow_html=True)
 
-# Focused Session Workspace Accumulator
 active_run_delta = (time.time() - st.session_state.start_time) if (st.session_state.running and not st.session_state.break_mode) else 0
 st.markdown(
     f"<div class='metric-card'><span style='color: {active_theme['accent']}; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;'>Cumulative Focus Block</span><br><b style='font-size: 24px; color: {active_theme['text']};'>{format_time(st.session_state.total_study_time + active_run_delta)}</b></div>",
     unsafe_allow_html=True
 )
 
-# Core Container Elements Instantiation
 timer_display = st.empty()
 quote_display = st.empty()
 break_display = st.empty()
 
-# --- BALANCED CONTROLS MATRIX ---
-ctrl_col1, ctrl_col2, ctrl_col3, ctrl_col4, ctrl_col5 = st.columns([1, 1, 1.2, 1, 1])
+# --- EQUALIZED CONTROLS LAYOUT (4 Columns now without Lap) ---
+ctrl_col1, ctrl_col2, ctrl_col3, ctrl_col4 = st.columns(4)
 
 with ctrl_col1:
     if st.button("✨ Start"):
@@ -256,37 +248,29 @@ with ctrl_col3:
         st.rerun()
 
 with ctrl_col4:
-    if st.button("🕊️ Lap"):
-        if st.session_state.running and not st.session_state.break_mode:
-            current_total = time.time() - st.session_state.start_time
-            if current_total > 0:
-                lap_duration = current_total - st.session_state.last_lap_elapsed
-                st.session_state.last_lap_elapsed = current_total
-                st.session_state.laps.insert(0, {
-                    "num": len(st.session_state.laps) + 1, 
-                    "duration": format_time(lap_duration), 
-                    "total": format_time(current_total)
-                })
-                st.rerun()
-
-with ctrl_col5:
     if st.button("🥀 Reset"):
         st.session_state.start_time = None
         st.session_state.running = False
         st.session_state.elapsed_time = 0
         st.session_state.total_study_time = 0
-        st.session_state.laps = []
-        st.session_state.last_lap_elapsed = 0
         st.session_state.break_mode = False
         st.session_state.break_end_time = None
         st.rerun()
 
-# --- INTELLIGENT COMPLEMENTARY WORKSPACE INPUTS ---
+# --- INTENT BINDING WORKSPACE ---
 st.markdown("<div style='max-width:580px; margin:25px auto 0 auto;'>", unsafe_allow_html=True)
-current_intent = st.text_area(label="🎯 Focus Target Objectives:", placeholder="What concept or build layout are we locking down right now?", height=68, label_visibility="collapsed")
+st.text_area(
+    label="🎯 Focus Target Objectives:", 
+    value=st.session_state.current_target,
+    placeholder="Type focus goal here and hit Ctrl+Enter to save...", 
+    height=68, 
+    label_visibility="collapsed",
+    key="target_input_field",
+    on_change=update_target
+)
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- PROCESS LOOP ACTIONS ---
+# --- AUTOMATED LOOP CLOCK ---
 if st.session_state.running:
     if st.session_state.break_mode:
         remaining_break = st.session_state.break_end_time - time.time()
@@ -320,20 +304,8 @@ if st.session_state.running:
     st.rerun()
 
 else:
-    # Static Configuration View Mode Default
     display_timestamp = format_time(st.session_state.elapsed_time)
     timer_display.markdown(
         f"<div class='timer-plate'><p class='timer-text' style='color: {active_theme['accent']} !important;'>{display_timestamp}</p></div>", 
         unsafe_allow_html=True
     )
-
-# --- LAP HISTORICAL MATRIX ---
-if st.session_state.laps:
-    st.markdown("<div class='lap-board'>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='font-size: 15px; font-weight: 400; color: {active_theme['text']}; letter-spacing: 1px; margin-bottom:12px;'>📜 Focus Milestone Records</h3>", unsafe_allow_html=True)
-    for lap in st.session_state.laps:
-        st.markdown(
-            f"<div class='lap-row'><span>✨ Milestone <b>#{lap['num']}</b></span><span>⏱️ Duration: <b>{lap['duration']}</b> <span style='color:{active_theme['accent']}aa; font-size:11px; margin-left:8px;'>(Timeline: {lap['total']})</span></span></div>",
-            unsafe_allow_html=True
-        )
-    st.markdown("</div>", unsafe_allow_html=True)
