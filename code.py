@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # --- PAGE CONFIGURATION ---
-st.set_page_config(page_title="✨ aesthetic space", page_icon="🥀", layout="centered")
+st.set_page_config(page_title="✨ Aesthetic Space", page_icon="🥀", layout="centered")
 
 # --- THEME PALETTES DICTIONARY ---
 THEMES = {
@@ -176,7 +176,7 @@ BREAK_ACTIVITIES = [
 ]
 
 # --- APP INTERFACE ---
-st.title("🥀 study ritual.")
+st.title("🥀 Study Ritual.")
 st.caption(f"currently vibrating in: {selected_theme_name.lower()}")
 
 # State Management for Stopwatch
