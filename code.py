@@ -9,6 +9,9 @@ if "elapsed_time" not in st.session_state: st.session_state.elapsed_time = 0
 if "total_study_time" not in st.session_state: st.session_state.total_study_time = 0
 if "break_mode" not in st.session_state: st.session_state.break_mode = False
 if "break_end_time" not in st.session_state: st.session_state.break_end_time = None
+
+# Streamlit automatically tracks the text area input if the key is specified. 
+# We initialize it here once so it exists safely.
 if "current_target" not in st.session_state: st.session_state.current_target = ""
 
 def format_time(seconds_count):
@@ -19,10 +22,6 @@ def format_time(seconds_count):
 # Background Heartbeat Engine (Keeps tab active when you switch away)
 if st.session_state.running:
     st_autorefresh(interval=1000, key="global_timer_heartbeat")
-
-# Sync input state
-def update_target():
-    st.session_state.current_target = st.session_state.target_input_field
 
 # Dynamic Tab Streaming Header
 tab_title = "Study ritual"
@@ -279,14 +278,14 @@ with ctrl_col4:
 
 # --- TARGET WORK BLOCK ---
 st.markdown("<div style='max-width:580px; margin:25px auto 0 auto;'>", unsafe_allow_html=True)
+# By directly tying key="current_target" here, Streamlit natively syncs the layout state 
+# without triggering a wipe cycle on Ctrl+Enter or layout ticks.
 st.text_area(
     label="🎯 Focus Target Objectives:", 
-    value=st.session_state.current_target,
     placeholder="Type focus goal here and hit Ctrl+Enter to save...", 
     height=68, 
     label_visibility="collapsed",
-    key="target_input_field",
-    on_change=update_target
+    key="current_target"
 )
 st.markdown("</div>", unsafe_allow_html=True)
 
