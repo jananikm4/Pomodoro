@@ -249,21 +249,6 @@ with col3:
         st.rerun()
 
 with col4:
-    if st.button("🕊️ Lap"):
-        if st.session_state.running and not st.session_state.break_mode:
-            current_total = time.time() - st.session_state.start_time
-            if current_total > 0:
-                lap_duration = current_total - st.session_state.last_lap_elapsed
-                st.session_state.last_lap_elapsed = current_total
-                lap_num = len(st.session_state.laps) + 1
-                st.session_state.laps.insert(0, {
-                    "num": lap_num, 
-                    "duration": format_time(lap_duration), 
-                    "total": format_time(current_total)
-                })
-                st.rerun()  # 👈 Added this to force the UI to display the new lap instantly!
-
-with col5:
     if st.button("🥀 Reset"):
         st.session_state.start_time = None
         st.session_state.running = False
