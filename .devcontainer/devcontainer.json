@@ -31,3 +31,4 @@
     8501
   ]
 }
+pip install streamlit-autorefresh
