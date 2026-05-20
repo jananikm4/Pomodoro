@@ -1,85 +1,185 @@
 import streamlit as st
 import time
-import random
 
-# --- PAGE CONFIGURATION & PINTEREST-INSPIRED DARK FEMININE THEME ---
-st.set_page_config(page_title="✨ study space", page_icon="🥀", layout="centered")
+# --- PAGE CONFIGURATION ---
+st.set_page_config(page_title="✨ aesthetic space", page_icon="🥀", layout="centered")
 
-# Custom CSS to completely revamp Streamlit's default look
-st.markdown("""
+# --- THEME PALETTES DICTIONARY ---
+THEMES = {
+    "🥀 Persephone's Descent": {
+        "bg": "#140B0B",       # A Garnet's Touch
+        "card": "#471417",     # Miles Of Persephone
+        "text": "#CD9454",     # Juno's Emblem
+        "accent": "#A22737",   # Arresting Appeal
+        "muted": "#660611"     # Passion Unraveled
+    },
+    "🌿 Botanical Solace": {
+        "bg": "#043323",       # Dark green
+        "card": "#105666",     # Midnight green
+        "text": "#F7F4D5",     # Beige
+        "accent": "#839050",   # Moss green
+        "muted": "#039680"     # Rosy brown/teal accent
+    },
+    "🏺 Gilded Bistre": {
+        "bg": "#210100",       # Bistre
+        "card": "#814436",     # Indian Red
+        "text": "#FECE79",     # Butter
+        "accent": "#E64341",   # Goldfinch
+        "muted": "#8C0902"     # Garnet
+    },
+    "🔮 Cyber Orchid": {
+        "bg": "#3D1472",       # Persian Indigo
+        "card": "#3333AF",     # Blue Depression
+        "text": "#FA8EE4",     # Pink Wink
+        "accent": "#9896FF",   # Gobalite
+        "muted": "#B744B5"     # Purple Ink
+    },
+    "🌊 Tropical Sea Foam": {
+        "bg": "#076DDF",       # Deep Sky
+        "card": "#19887F",     # Palm Splash
+        "text": "#DAF6F6",     # Sea Foam
+        "accent": "#92F1EC",   # Crystal Clear
+        "muted": "#35AEAC"     # Tropical Sea
+    },
+    "🦩 Poolside Barbie": {
+        "bg": "#227E9D",       # Pool Bottom
+        "card": "#51ACC5",     # Dragonity
+        "text": "#FDF9FA",     # Abalone
+        "accent": "#FDA9CC",   # Cotton Candy
+        "muted": "#FD50A4"     # Barbie Pink
+    },
+    "☀️ Sun-Drenched Apricot": {
+        "bg": "#FA9058",       # Sè Lời Orange
+        "card": "#FECC64",     # Quing Yellow
+        "text": "#FFF6E8",     # Apricot Ice
+        "accent": "#FCEABC",   # Sun Drenched
+        "muted": "#B5D8FF"     # Azure Sky
+    },
+    "🍁 Autumnal Alchemy": {
+        "bg": "#13260F",       # Salamander
+        "card": "#344F30",     # Palm Leaf
+        "text": "#FDD973",     # Golden Coin
+        "accent": "#F47230",   # Liselotte Syrup
+        "muted": "#9F350B"     # Carmin
+    }
+}
+
+# --- SIDEBAR CONFIGURATION ---
+with st.sidebar:
+    st.markdown("### 🎨 Choose Your Vibe")
+    selected_theme_name = st.selectbox("Current Theme", list(THEMES.keys()))
+    
+    st.markdown("---")
+    st.markdown("### ⏳ Intervals")
+    quote_interval = st.number_input("Motivation Interval (Mins)", value=15, min_value=1)
+    break_interval = st.number_input("Break Suggestion Interval (Mins)", value=20, min_value=1)
+
+active_theme = THEMES[selected_theme_name]
+
+# --- INJECT CUSTOM CSS ---
+st.markdown(f"""
     <style>
-    /* Main background */
-    .stApp {
-        background-color: #161517;
-        color: #E3DCD2;
+    .stApp {{
+        background-color: {active_theme['bg']} !important;
+        color: {active_theme['text']} !important;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
-    /* Style the buttons */
-    .stButton>button {
-        background-color: #322A2E !important;
-        color: #DDA7A5 !important;
-        border: 1px solid #4A3E44 !important;
-        border-radius: 20px !important;
-        padding: 0.5rem 2rem !important;
-        transition: all 0.3s ease;
-    }
-    .stButton>button:hover {
-        background-color: #DDA7A5 !important;
-        color: #161517 !important;
-        border-color: #DDA7A5 !important;
-        box-shadow: 0px 0px 10px rgba(221, 167, 165, 0.4);
-    }
-    /* Elegant text styling */
-    h1 {
-        color: #DDA7A5 !important;
+        transition: all 0.5s ease;
+    }}
+    [data-testid="stSidebar"] {{
+        background-color: {active_theme['card']} !important;
+        border-right: 1px solid {active_theme['accent']}33;
+    }}
+    [data-testid="stSidebar"] * {{
+        color: {active_theme['text']} !important;
+    }}
+    .stButton>button {{
+        background-color: {active_theme['card']} !important;
+        color: {active_theme['accent']} !important;
+        border: 1px solid {active_theme['accent']}66 !important;
+        border-radius: 24px !important;
+        padding: 0.5rem 1.5rem !important;
         font-weight: 300 !important;
-        letter-spacing: 2px;
-    }
-    .quote-box {
-        background-color: #1F1C1E;
-        border-left: 3px solid #9A8194;
-        padding: 15px;
-        border-radius: 8px;
-        margin: 20px 0;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }}
+    .stButton>button:hover {{
+        background-color: {active_theme['accent']} !important;
+        color: {active_theme['bg']} !important;
+        border-color: {active_theme['accent']} !important;
+        box-shadow: 0px 0px 15px {active_theme['accent']}66;
+    }}
+    .quote-box {{
+        background-color: {active_theme['card']}bf;
+        border-left: 3px solid {active_theme['accent']};
+        padding: 18px;
+        border-radius: 12px;
+        margin: 22px 0;
         font-style: italic;
-        color: #C3B3A9;
-    }
-    .break-box {
-        background-color: #241E22;
-        border: 1px dashed #A78BFA;
-        padding: 15px;
-        border-radius: 8px;
-        margin: 20px 0;
-        color: #E2D9E2;
-    }
+        color: {active_theme['text']};
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        line-height: 1.5;
+    }}
+    .break-box {{
+        background-color: {active_theme['card']}bf;
+        border: 1px dashed {active_theme['muted']};
+        padding: 18px;
+        border-radius: 12px;
+        margin: 22px 0;
+        color: {active_theme['text']};
+        line-height: 1.5;
+    }}
     </style>
 """, unsafe_allow_html=True)
 
-# --- DATA POOLS ---
+# --- 30 QUOTES BY SUCCESSFUL WOMEN ---
 MOTIVATIONAL_QUOTES = [
-    "“She remembered who she was and the game changed.”",
-    "Quietly building your empire. Keep going, lovely.",
-    "“The future belongs to those who believe in the beauty of their dreams.” — Eleanor Roosevelt",
-    "Romanticize the discipline. The focus looks beautiful on you.",
-    "Small steps every single day. You are closer than you were yesterday. ✨",
-    "“Energy flows where attention goes.” Focus beautifully.",
-    "Prove it to yourself, not to them."
+    "“The most effective way to do it, is to do it.” — Amelia Earhart",
+    "“I never dreamed about success. I worked for it.” — Estée Lauder",
+    "“Define success on your own terms, achieve it by your own rules, and build a life you’re proud to live.” — Anne Sweeney",
+    "“I'm not intimidating, you're intimidated. There's a difference.” — Issa Rae",
+    "“You can waste your lives drawing lines. Or you can live your life crossing them.” — Shonda Rhimes",
+    "“Think like a queen. A queen is not afraid to fail. Failure is another steppingstone to greatness.” — Oprah Winfrey",
+    "“The power you have is to be the best version of yourself you can be, so you can create a better world.” — Ashley Graham",
+    "“If you don't risk anything, you risk even more.” — Erica Jong",
+    "“Nothing is impossible, the word itself says 'I'm possible!'” — Audrey Hepburn",
+    "“If you’re clear on what you believe, you have a great foundation to step out into the world.” — Sanna Marin",
+    "“We do not need magic to change the world, we carry all the power we need inside ourselves already.” — J.K. Rowling",
+    "“Passion is energy. Feel the power that comes from focusing on what excites you.” — Oprah Winfrey",
+    "“Don't watch the clock; do what it does. Keep going.” — Sam Levenson",
+    "“I am not free while any woman is unfree, even when her shackles are very different from my own.” — Audre Lorde",
+    "“You may encounter many defeats, but you must not be defeated.” — Maya Angelou",
+    "“Done is better than perfect.” — Sheryl Sandberg",
+    "“The most common way people give up their power is by thinking they don't have any.” — Alice Walker",
+    "“If they don't give you a seat at the table, bring a folding chair.” — Shirley Chisholm",
+    "“Success isn't about how much money you make, it's about the difference you make in people's lives.” — Michelle Obama",
+    "“Never limit yourself because of others’ limited imagination; never limit others because of your own limited imagination.” — Dr. Mae Jemison",
+    "“You cannot leave footprints in the sands of time if you are sitting on your butt. And who wants to leave buttprints?” — Bobbie Thomas",
+    "“It is within everyone's power to rewrite their story.” — Mindy Kaling",
+    "“I naturally look at the world as something that needs to be explored, not feared.” — Sophia Amoruso",
+    "“I’ve learned that making a 'living' is not the same thing as making a 'life.'” — Maya Angelou",
+    "“Do one thing every day that scares you.” — Eleanor Roosevelt",
+    "“The desire to reach for the stars is ambitious. The desire to reach hearts is wise.” — Maya Angelou",
+    "“Turn your wounds into wisdom.” — Oprah Winfrey",
+    "“Hard work keeps the wrinkles out of the mind and spirit.” — Helena Rubinstein",
+    "“You have to look at your career and your life as a collection of horizons.” — Indra Nooyi",
+    "“Be messy and complicated and afraid and show up anyway.” — Glennon Doyle"
 ]
 
+# --- REFRESHED BREAK OPTIONS WITH YOUR REQS ---
 BREAK_ACTIVITIES = [
-    "☕ Step away and fix yourself a warm cup of matcha or tea.",
-    "🧘‍♀️ Do a quick 2-minute shoulder roll and neck stretch.",
-    "🌱 Water a plant or look out the window at the sky to rest your eyes.",
-    "💃 Put on your favorite track and just stretch/move around for 3 minutes.",
-    "💧 Take 5 deep breaths and refill your water bottle.",
-    "journal page: Write down three things you're grateful for right now."
+    "📝 write 3 things ur thankful for in journal",
+    "🧊 get some ice water",
+    "🧘‍♀️ Lie on the floor and stare at the ceiling",
+    "☕ Step away and fix yourself a warm cup of matcha or herbal tea.",
+    "🌱 Water a plant or look out the window at the sky to completely rest your eyes.",
+    "💃 Put on your current favorite track and just move around freely for 3 minutes."
 ]
 
 # --- APP INTERFACE ---
-st.title("🥀 romanticize the grind.")
-st.caption("a minimalist stopwatch for deep, beautiful focus.")
+st.title("🥀 study ritual.")
+st.caption(f"currently vibrating in: {selected_theme_name.lower()}")
 
-# Initialize session state variables to track time across clicks
+# State Management for Stopwatch
 if "start_time" not in st.session_state:
     st.session_state.start_time = None
 if "running" not in st.session_state:
@@ -87,19 +187,11 @@ if "running" not in st.session_state:
 if "elapsed_time" not in st.session_state:
     st.session_state.elapsed_time = 0
 
-# Sidebar configuration for custom settings
-with st.sidebar:
-    st.markdown("### ⏳ Interval Adjustments")
-    quote_interval = st.number_input("Motivation Interval (Mins)", value=15, min_value=1)
-    break_interval = st.number_input("Break Suggestion Interval (Mins)", value=20, min_value=1)
-    st.markdown("---")
-    st.markdown("*Tip: Shrink your browser window down to just show the timer text, and place it in the corner of your screen!*")
-
-# Create simple control layout
+# Controls Layout
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("✨ Start / Resume"):
+    if st.button("✨ Start"):
         if not st.session_state.running:
             st.session_state.start_time = time.time() - st.session_state.elapsed_time
             st.session_state.running = True
@@ -117,45 +209,41 @@ with col3:
         st.session_state.elapsed_time = 0
         st.rerun()
 
-# --- THE LIVE TIMER LOOP ---
+# Dynamic Placeholders
 timer_display = st.empty()
 quote_display = st.empty()
 break_display = st.empty()
 
-# Keep refreshing the page if the stopwatch is ticking
+# --- STOPWATCH LIVE EXECUTION LOOP ---
 while st.session_state.running:
-    # Calculate exactly how long it's been running
     current_elapsed = time.time() - st.session_state.start_time
     
-    # Calculate minutes and seconds
     hours, remainder = divmod(int(current_elapsed), 3600)
     minutes, seconds = divmod(remainder, 60)
     
-    # Update the big beautiful aesthetic clock display
+    # Large Elegant Display
     timer_display.markdown(
-        f"<h1 style='font-size: 65px; font-weight: 200; text-align: center; color: #DDA7A5;'>{hours:02d}:{minutes:02d}:{seconds:02d}</h1>", 
+        f"<h1 style='font-size: 70px; font-weight: 200; text-align: center; color: {active_theme['text']};'>{hours:02d}:{minutes:02d}:{seconds:02d}</h1>", 
         unsafe_allow_html=True
     )
     
-    # Check for the 15-Minute Motivation Trigger
-    # Using dynamic calculation so it updates seamlessly when a new interval is reached
     current_total_minutes = int(current_elapsed // 60)
     
+    # Quote trigger loop logic
     if current_total_minutes > 0 and current_total_minutes % quote_interval == 0:
-        # Pick a pseudo-random quote based on the current interval index so it doesn't flip every second
         quote_idx = (current_total_minutes // quote_interval) % len(MOTIVATIONAL_QUOTES)
         quote_display.markdown(
-            f"<div class='quote-box'><b>Gentle Reminder:</b><br>{MOTIVATIONAL_QUOTES[quote_idx]}</div>", 
+            f"<div class='quote-box'><b>From a woman who built her empire:</b><br>{MOTIVATIONAL_QUOTES[quote_idx]}</div>", 
             unsafe_allow_html=True
         )
     else:
         quote_display.empty()
         
-    # Check for the 20-Minute Break Suggestion Trigger
+    # Break idea trigger loop logic
     if current_total_minutes > 0 and current_total_minutes % break_interval == 0:
         break_idx = (current_total_minutes // break_interval) % len(BREAK_ACTIVITIES)
         break_display.markdown(
-            f"<div class='break-box'><b>☕ Lap Marker Reached:</b><br>{BREAK_ACTIVITIES[break_idx]}</div>", 
+            f"<div class='break-box'><b>☕ Time to reset:</b><br>{BREAK_ACTIVITIES[break_idx]}</div>", 
             unsafe_allow_html=True
         )
     else:
@@ -164,11 +252,11 @@ while st.session_state.running:
     time.sleep(1)
     st.rerun()
 
-# Static display if the timer is paused or has not started yet
+# Static Display
 if not st.session_state.running:
     hours, remainder = divmod(int(st.session_state.elapsed_time), 3600)
     minutes, seconds = divmod(remainder, 60)
     timer_display.markdown(
-        f"<h1 style='font-size: 65px; font-weight: 200; text-align: center; color: #9A8194;'>{hours:02d}:{minutes:02d}:{seconds:02d}</h1>", 
+        f"<h1 style='font-size: 70px; font-weight: 200; text-align: center; color: {active_theme['accent']};'>{hours:02d}:{minutes:02d}:{seconds:02d}</h1>", 
         unsafe_allow_html=True
     )
