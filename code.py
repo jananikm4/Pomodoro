@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+from streamlit_autorefresh import st_autorefresh
 
 # --- STATE CONFIGURATION ---
 if "start_time" not in st.session_state: st.session_state.start_time = None
@@ -15,11 +16,15 @@ def format_time(seconds_count):
     minutes, seconds = divmod(remainder, 60)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
-# Update text state immediately when the user changes it
+# Background Heartbeat Engine (Ticks every 1000ms, stays alive in background tabs)
+if st.session_state.running:
+    st_autorefresh(interval=1000, key="global_timer_heartbeat")
+
+# Update text state immediately when user clicks out or presses Ctrl+Enter
 def update_target():
     st.session_state.current_target = st.session_state.target_input_field
 
-# Dynamic Tab Streaming Header
+# Dynamic Tab Streaming Header (Calculated accurately on every heartbeat)
 tab_title = "Study ritual"
 if st.session_state.running:
     if st.session_state.break_mode and st.session_state.break_end_time:
@@ -33,8 +38,8 @@ st.set_page_config(page_title=tab_title, page_icon="🥀", layout="centered")
 
 # --- CUSTOM PALETTE REGISTRY ---
 THEMES = {
-    "🌌 Periwinkle Dream": {
-        "bg": "#A2A6F2", "card": "#7D82E6", "text": "#E8ECFA", "accent": "#F28627", "muted": "#B5B8F5"
+    "👑 Regal Velvet Navy": {
+        "bg": "#0A1D48", "card": "#171721", "text": "#F3EBE0", "accent": "#C0B4EA", "muted": "#9E0E1D"
     },
     "🎨 Fruit Punch Orchard": {
         "bg": "#C1809A", "card": "#DF0F57", "text": "#EABF28", "accent": "#EF8000", "muted": "#AACCCC"
@@ -186,7 +191,7 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
-# --- ENGINE DATA ARCHIVES ---
+# --- DATA POOLS ---
 MOTIVATIONAL_QUOTES = [
     "“The most effective way to do it, is to do it.” — Amelia Earhart",
     "“I never dreamed about success. I worked for it.” — Estée Lauder",
@@ -210,6 +215,7 @@ BREAK_ACTIVITIES = [
 st.markdown("<h1 class='main-title'>🥀 Study ritual.</h1>", unsafe_allow_html=True)
 st.markdown("<p class='sub-lyrics'>I ain't never had a doubt inside me • And if I ever told you that I did, I'm fuckin' lyin'</p>", unsafe_allow_html=True)
 
+# Session Total Accumulator Card Calculation
 active_run_delta = (time.time() - st.session_state.start_time) if (st.session_state.running and not st.session_state.break_mode) else 0
 st.markdown(
     f"<div class='metric-card'><span style='color: {active_theme['accent']}; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;'>Cumulative Focus Block</span><br><b style='font-size: 24px; color: {active_theme['text']};'>{format_time(st.session_state.total_study_time + active_run_delta)}</b></div>",
@@ -220,7 +226,7 @@ timer_display = st.empty()
 quote_display = st.empty()
 break_display = st.empty()
 
-# --- EQUALIZED CONTROLS LAYOUT (4 Columns now without Lap) ---
+# --- EQUALIZED SYSTEM CONTROLS (Single Row Grid) ---
 ctrl_col1, ctrl_col2, ctrl_col3, ctrl_col4 = st.columns(4)
 
 with ctrl_col1:
@@ -257,7 +263,7 @@ with ctrl_col4:
         st.session_state.break_end_time = None
         st.rerun()
 
-# --- INTENT BINDING WORKSPACE ---
+# --- WORKSPACE INTENT WORK BLOCK ---
 st.markdown("<div style='max-width:580px; margin:25px auto 0 auto;'>", unsafe_allow_html=True)
 st.text_area(
     label="🎯 Focus Target Objectives:", 
@@ -270,7 +276,7 @@ st.text_area(
 )
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- AUTOMATED LOOP CLOCK ---
+# --- DYNAMIC DISPLAYS ENGINE ---
 if st.session_state.running:
     if st.session_state.break_mode:
         remaining_break = st.session_state.break_end_time - time.time()
@@ -300,10 +306,8 @@ if st.session_state.running:
             break_idx = (current_total_minutes // break_interval) % len(BREAK_ACTIVITIES)
             break_display.markdown(f"<div class='break-box'><b>☕ Rest Strategy:</b><br>{BREAK_ACTIVITIES[break_idx]}</div>", unsafe_allow_html=True)
 
-    time.sleep(1)
-    st.rerun()
-
 else:
+    # Static Configuration Default View
     display_timestamp = format_time(st.session_state.elapsed_time)
     timer_display.markdown(
         f"<div class='timer-plate'><p class='timer-text' style='color: {active_theme['accent']} !important;'>{display_timestamp}</p></div>", 
