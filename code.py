@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # --- PAGE CONFIGURATION ---
-st.set_page_config(page_title="✨ Aesthetic Space", page_icon="🥀", layout="centered")
+st.set_page_config(page_title="✨ I gon make it out", page_icon="🥀", layout="centered")
 
 # --- THEME PALETTES DICTIONARY ---
 THEMES = {
@@ -101,6 +101,7 @@ st.markdown(f"""
         font-weight: 300 !important;
         letter-spacing: 1px;
         transition: all 0.3s ease;
+        width: 100%;
     }}
     .stButton>button:hover {{
         background-color: {active_theme['accent']} !important;
@@ -128,10 +129,27 @@ st.markdown(f"""
         color: {active_theme['text']};
         line-height: 1.5;
     }}
+    .metric-card {{
+        background-color: {active_theme['card']}66;
+        border: 1px solid {active_theme['accent']}22;
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 20px;
+    }}
+    .lap-row {{
+        background-color: {active_theme['card']}40;
+        border-bottom: 1px solid {active_theme['accent']}11;
+        padding: 8px 16px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: {active_theme['text']};
+    }}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 30 QUOTES BY SUCCESSFUL WOMEN ---
+# --- DATA POOLS ---
 MOTIVATIONAL_QUOTES = [
     "“The most effective way to do it, is to do it.” — Amelia Earhart",
     "“I never dreamed about success. I worked for it.” — Estée Lauder",
@@ -165,7 +183,6 @@ MOTIVATIONAL_QUOTES = [
     "“Be messy and complicated and afraid and show up anyway.” — Glennon Doyle"
 ]
 
-# --- REFRESHED BREAK OPTIONS WITH YOUR REQS ---
 BREAK_ACTIVITIES = [
     "📝 write 3 things ur thankful for in journal",
     "🧊 get some ice water",
@@ -175,20 +192,38 @@ BREAK_ACTIVITIES = [
     "💃 Put on your current favorite track and just move around freely for 3 minutes."
 ]
 
-# --- APP INTERFACE ---
-st.title("🥀 Study Ritual.")
-st.caption(f"currently vibrating in: {selected_theme_name.lower()}")
+# Helper function to format seconds into an elegant clean timestamp
+def format_time(seconds_count):
+    hours, remainder = divmod(int(seconds_count), 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
-# State Management for Stopwatch
+# --- STATE MANAGEMENT ---
 if "start_time" not in st.session_state:
     st.session_state.start_time = None
 if "running" not in st.session_state:
     st.session_state.running = False
 if "elapsed_time" not in st.session_state:
     st.session_state.elapsed_time = 0
+if "total_study_time" not in st.session_state:
+    st.session_state.total_study_time = 0
+if "laps" not in st.session_state:
+    st.session_state.laps = []
+if "last_lap_elapsed" not in st.session_state:
+    st.session_state.last_lap_elapsed = 0
 
-# Controls Layout
-col1, col2, col3 = st.columns(3)
+# --- APP INTERFACE ---
+st.title("🥀 Study ritual.")
+st.caption("I ain't never had a doubt inside me\nAnd if I ever told you that I did, I'm fuckin' lyin'")
+
+# Session Total Accumulator Card
+st.markdown(
+    f"<div class='metric-card'><span style='color: {active_theme['accent']}; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;'>Total Focused Time This Session</span><br><b style='font-size: 22px; color: {active_theme['text']};'>{format_time(st.session_state.total_study_time + (time.time() - st.session_state.start_time if st.session_state.running else 0))}</b></div>",
+    unsafe_allow_html=True
+)
+
+# Responsive Controls Layout (4 columns to fit the new Lap button)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     if st.button("✨ Start"):
@@ -199,14 +234,34 @@ with col1:
 with col2:
     if st.button("⏳ Pause"):
         if st.session_state.running:
-            st.session_state.elapsed_time = time.time() - st.session_state.start_time
+            current_run_duration = time.time() - st.session_state.start_time
+            st.session_state.total_study_time += (current_run_duration - st.session_state.elapsed_time)
+            st.session_state.elapsed_time = current_run_duration
             st.session_state.running = False
+            st.rerun()
 
 with col3:
+    if st.button("🕊️ Log Lap"):
+        if st.session_state.running:
+            current_total = time.time() - st.session_state.start_time
+        else:
+            current_total = st.session_state.elapsed_time
+            
+        if current_total > 0:
+            lap_duration = current_total - st.session_state.last_lap_elapsed
+            st.session_state.last_lap_elapsed = current_total
+            
+            lap_num = len(st.session_state.laps) + 1
+            st.session_state.laps.insert(0, {"num": lap_num, "duration": format_time(lap_duration), "total": format_time(current_total)})
+
+with col4:
     if st.button("🥀 Reset"):
         st.session_state.start_time = None
         st.session_state.running = False
         st.session_state.elapsed_time = 0
+        st.session_state.total_study_time = 0
+        st.session_state.laps = []
+        st.session_state.last_lap_elapsed = 0
         st.rerun()
 
 # Dynamic Placeholders
@@ -260,3 +315,12 @@ if not st.session_state.running:
         f"<h1 style='font-size: 70px; font-weight: 200; text-align: center; color: {active_theme['accent']};'>{hours:02d}:{minutes:02d}:{seconds:02d}</h1>", 
         unsafe_allow_html=True
     )
+
+# --- LAP DISPLAY BOARD AREA ---
+if st.session_state.laps:
+    st.markdown(f"<h3 style='font-size: 16px; font-weight: 400; color: {active_theme['text']}; letter-spacing: 1px; margin-top: 30px;'>📜 Focus Milestones (Laps)</h3>", unsafe_allow_html=True)
+    for lap in st.session_state.laps:
+        st.markdown(
+            f"<div class='lap-row'><span>✨ Chapter/Subject Marker <b>#{lap['num']}</b></span><span>⏱️ Duration: <b>{lap['duration']}</b> <span style='color:{active_theme['accent']}aa; font-size:11px; margin-left:8px;'>(Timeline: {lap['total']})</span></span></div>",
+            unsafe_allow_html=True
+        )
