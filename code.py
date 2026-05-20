@@ -7,60 +7,49 @@ st.set_page_config(page_title="✨ I gon make it out", page_icon="🥀", layout=
 # --- THEME PALETTES DICTIONARY ---
 THEMES = {
     "🥀 Persephone's Descent": {
-        "bg": "#140B0B",       # A Garnet's Touch
-        "card": "#471417",     # Miles Of Persephone
-        "text": "#CD9454",     # Juno's Emblem
-        "accent": "#A22737",   # Arresting Appeal
-        "muted": "#660611"     # Passion Unraveled
+        "bg": "#140B0B", "card": "#471417", "text": "#CD9454", "accent": "#A22737", "muted": "#660611"
     },
     "🌿 Botanical Solace": {
-        "bg": "#043323",       # Dark green
-        "card": "#105666",     # Midnight green
-        "text": "#F7F4D5",     # Beige
-        "accent": "#839050",   # Moss green
-        "muted": "#039680"     # Rosy brown/teal accent
+        "bg": "#043323", "card": "#105666", "text": "#F7F4D5", "accent": "#839050", "muted": "#039680"
     },
     "🏺 Gilded Bistre": {
-        "bg": "#210100",       # Bistre
-        "card": "#814436",     # Indian Red
-        "text": "#FECE79",     # Butter
-        "accent": "#E64341",   # Goldfinch
-        "muted": "#8C0902"     # Garnet
+        "bg": "#210100", "card": "#814436", "text": "#FECE79", "accent": "#E64341", "muted": "#8C0902"
     },
     "🔮 Cyber Orchid": {
-        "bg": "#3D1472",       # Persian Indigo
-        "card": "#3333AF",     # Blue Depression
-        "text": "#FA8EE4",     # Pink Wink
-        "accent": "#9896FF",   # Gobalite
-        "muted": "#B744B5"     # Purple Ink
+        "bg": "#3D1472", "card": "#3333AF", "text": "#FA8EE4", "accent": "#9896FF", "muted": "#B744B5"
     },
     "🌊 Tropical Sea Foam": {
-        "bg": "#076DDF",       # Deep Sky
-        "card": "#19887F",     # Palm Splash
-        "text": "#DAF6F6",     # Sea Foam
-        "accent": "#92F1EC",   # Crystal Clear
-        "muted": "#35AEAC"     # Tropical Sea
+        "bg": "#076DDF", "card": "#19887F", "text": "#DAF6F6", "accent": "#92F1EC", "muted": "#35AEAC"
     },
     "🦩 Poolside Barbie": {
-        "bg": "#227E9D",       # Pool Bottom
-        "card": "#51ACC5",     # Dragonity
-        "text": "#FDF9FA",     # Abalone
-        "accent": "#FDA9CC",   # Cotton Candy
-        "muted": "#FD50A4"     # Barbie Pink
+        "bg": "#227E9D", "card": "#51ACC5", "text": "#FDF9FA", "accent": "#FDA9CC", "muted": "#FD50A4"
     },
     "☀️ Sun-Drenched Apricot": {
-        "bg": "#FA9058",       # Sè Lời Orange
-        "card": "#FECC64",     # Quing Yellow
-        "text": "#FFF6E8",     # Apricot Ice
-        "accent": "#FCEABC",   # Sun Drenched
-        "muted": "#B5D8FF"     # Azure Sky
+        "bg": "#FA9058", "card": "#FECC64", "text": "#FFF6E8", "accent": "#FCEABC", "muted": "#B5D8FF"
     },
     "🍁 Autumnal Alchemy": {
-        "bg": "#13260F",       # Salamander
-        "card": "#344F30",     # Palm Leaf
-        "text": "#FDD973",     # Golden Coin
-        "accent": "#F47230",   # Liselotte Syrup
-        "muted": "#9F350B"     # Carmin
+        "bg": "#13260F", "card": "#344F30", "text": "#FDD973", "accent": "#F47230", "muted": "#9F350B"
+    },
+    "🌊 Navagio Coastline": {
+        "bg": "#3F9CB0", "card": "#58DEE1", "text": "#FFD6C7", "accent": "#EB8629", "muted": "#DC4A44"
+    },
+    "⚡ Neon Pulse": {
+        "bg": "#231F20", "card": "#0AA9E0", "text": "#7BF004", "accent": "#FC05B8", "muted": "#FA6B05"
+    },
+    "🌸 Pastel Dreamcicle": {
+        "bg": "#594EAD", "card": "#5A9AD6", "text": "#F99E85", "accent": "#F4607B", "muted": "#78C681"
+    },
+    "🪵 Desert Saddle": {
+        "bg": "#957443", "card": "#1FB189", "text": "#CCCCAC", "accent": "#EC321F", "muted": "#E7ABC7"
+    },
+    "🍓 Azure Mist & Berry": {
+        "bg": "#64A4ED", "card": "#A72536", "text": "#E5FAFF", "accent": "#FA4F8E", "muted": "#FFF2A3"
+    },
+    "🧥 White Silk & Navy": {
+        "bg": "#26386A", "card": "#75B06F", "text": "#FAE251", "accent": "#FFFFFF", "muted": "#1F2B52"
+    },
+    "🌅 Denim Sunshine": {
+        "bg": "#3F1E17", "card": "#2E4C6D", "text": "#FFD058", "accent": "#FE422C", "muted": "#FA9743"
     }
 }
 
@@ -146,6 +135,16 @@ st.markdown(f"""
         font-size: 14px;
         color: {active_theme['text']};
     }}
+    .break-banner {{
+        background-color: {active_theme['accent']};
+        color: {active_theme['bg']};
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        letter-spacing: 1px;
+    }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -184,6 +183,10 @@ MOTIVATIONAL_QUOTES = [
 ]
 
 BREAK_ACTIVITIES = [
+    "🧼 wash your face & refresh",
+    "📂 Organize ONE tiny thing on your desk",
+    "🎨 Doodle your thoughts on scrap paper",
+    "✨ Work on making your study notes aesthetic",
     "📝 write 3 things ur thankful for in journal",
     "🧊 get some ice water",
     "🧘‍♀️ Lie on the floor and stare at the ceiling",
@@ -192,48 +195,46 @@ BREAK_ACTIVITIES = [
     "💃 Put on your current favorite track and just move around freely for 3 minutes."
 ]
 
-# Helper function to format seconds into an elegant clean timestamp
 def format_time(seconds_count):
     hours, remainder = divmod(int(seconds_count), 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 # --- STATE MANAGEMENT ---
-if "start_time" not in st.session_state:
-    st.session_state.start_time = None
-if "running" not in st.session_state:
-    st.session_state.running = False
-if "elapsed_time" not in st.session_state:
-    st.session_state.elapsed_time = 0
-if "total_study_time" not in st.session_state:
-    st.session_state.total_study_time = 0
-if "laps" not in st.session_state:
-    st.session_state.laps = []
-if "last_lap_elapsed" not in st.session_state:
-    st.session_state.last_lap_elapsed = 0
+if "start_time" not in st.session_state: st.session_state.start_time = None
+if "running" not in st.session_state: st.session_state.running = False
+if "elapsed_time" not in st.session_state: st.session_state.elapsed_time = 0
+if "total_study_time" not in st.session_state: st.session_state.total_study_time = 0
+if "laps" not in st.session_state: st.session_state.laps = []
+if "last_lap_elapsed" not in st.session_state: st.session_state.last_lap_elapsed = 0
+# Break Engine State Properties
+if "break_mode" not in st.session_state: st.session_state.break_mode = False
+if "break_end_time" not in st.session_state: st.session_state.break_end_time = None
 
 # --- APP INTERFACE ---
 st.title("🥀 Study ritual.")
 st.caption("I ain't never had a doubt inside me\nAnd if I ever told you that I did, I'm fuckin' lyin'")
 
 # Session Total Accumulator Card
+active_run_delta = (time.time() - st.session_state.start_time) if (st.session_state.running and not st.session_state.break_mode) else 0
 st.markdown(
-    f"<div class='metric-card'><span style='color: {active_theme['accent']}; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;'>Total Focused Time This Session</span><br><b style='font-size: 22px; color: {active_theme['text']};'>{format_time(st.session_state.total_study_time + (time.time() - st.session_state.start_time if st.session_state.running else 0))}</b></div>",
+    f"<div class='metric-card'><span style='color: {active_theme['accent']}; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;'>Total Focused Time This Session</span><br><b style='font-size: 22px; color: {active_theme['text']};'>{format_time(st.session_state.total_study_time + active_run_delta)}</b></div>",
     unsafe_allow_html=True
 )
 
-# Responsive Controls Layout (4 columns to fit the new Lap button)
-col1, col2, col3, col4 = st.columns(4)
+# Responsive Controls Layout (5 equal columns)
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     if st.button("✨ Start"):
         if not st.session_state.running:
+            st.session_state.break_mode = False
             st.session_state.start_time = time.time() - st.session_state.elapsed_time
             st.session_state.running = True
 
 with col2:
     if st.button("⏳ Pause"):
-        if st.session_state.running:
+        if st.session_state.running and not st.session_state.break_mode:
             current_run_duration = time.time() - st.session_state.start_time
             st.session_state.total_study_time += (current_run_duration - st.session_state.elapsed_time)
             st.session_state.elapsed_time = current_run_duration
@@ -241,20 +242,23 @@ with col2:
             st.rerun()
 
 with col3:
-    if st.button("🕊️ Log Lap"):
-        if st.session_state.running:
-            current_total = time.time() - st.session_state.start_time
-        else:
-            current_total = st.session_state.elapsed_time
-            
-        if current_total > 0:
-            lap_duration = current_total - st.session_state.last_lap_elapsed
-            st.session_state.last_lap_elapsed = current_total
-            
-            lap_num = len(st.session_state.laps) + 1
-            st.session_state.laps.insert(0, {"num": lap_num, "duration": format_time(lap_duration), "total": format_time(current_total)})
+    if st.button("☕ 5m Break"):
+        st.session_state.running = True
+        st.session_state.break_mode = True
+        st.session_state.break_end_time = time.time() + 300 # 5 minutes countdown anchor
+        st.rerun()
 
 with col4:
+    if st.button("🕊️ Lap"):
+        if st.session_state.running and not st.session_state.break_mode:
+            current_total = time.time() - st.session_state.start_time
+            if current_total > 0:
+                lap_duration = current_total - st.session_state.last_lap_elapsed
+                st.session_state.last_lap_elapsed = current_total
+                lap_num = len(st.session_state.laps) + 1
+                st.session_state.laps.insert(0, {"num": lap_num, "duration": format_time(lap_duration), "total": format_time(current_total)})
+
+with col5:
     if st.button("🥀 Reset"):
         st.session_state.start_time = None
         st.session_state.running = False
@@ -262,6 +266,8 @@ with col4:
         st.session_state.total_study_time = 0
         st.session_state.laps = []
         st.session_state.last_lap_elapsed = 0
+        st.session_state.break_mode = False
+        st.session_state.break_end_time = None
         st.rerun()
 
 # Dynamic Placeholders
@@ -269,46 +275,63 @@ timer_display = st.empty()
 quote_display = st.empty()
 break_display = st.empty()
 
-# --- STOPWATCH LIVE EXECUTION LOOP ---
+# --- LIVE RUNNING EXECUTION LOOP (Handles both Focus Mode & Break Mode) ---
 while st.session_state.running:
-    current_elapsed = time.time() - st.session_state.start_time
-    
-    hours, remainder = divmod(int(current_elapsed), 3600)
-    minutes, seconds = divmod(remainder, 60)
-    
-    # Large Elegant Display
-    timer_display.markdown(
-        f"<h1 style='font-size: 70px; font-weight: 200; text-align: center; color: {active_theme['text']};'>{hours:02d}:{minutes:02d}:{seconds:02d}</h1>", 
-        unsafe_allow_html=True
-    )
-    
-    current_total_minutes = int(current_elapsed // 60)
-    
-    # Quote trigger loop logic
-    if current_total_minutes > 0 and current_total_minutes % quote_interval == 0:
-        quote_idx = (current_total_minutes // quote_interval) % len(MOTIVATIONAL_QUOTES)
-        quote_display.markdown(
-            f"<div class='quote-box'><b>From a woman who built her empire:</b><br>{MOTIVATIONAL_QUOTES[quote_idx]}</div>", 
-            unsafe_allow_html=True
-        )
-    else:
-        quote_display.empty()
+    if st.session_state.break_mode:
+        # --- BREAK OVERVIEW TRACKING LOOP ---
+        remaining_break = st.session_state.break_end_time - time.time()
         
-    # Break idea trigger loop logic
-    if current_total_minutes > 0 and current_total_minutes % break_interval == 0:
-        break_idx = (current_total_minutes // break_interval) % len(BREAK_ACTIVITIES)
-        break_display.markdown(
-            f"<div class='break-box'><b>☕ Time to reset:</b><br>{BREAK_ACTIVITIES[break_idx]}</div>", 
+        if remaining_break <= 0:
+            st.session_state.running = False
+            st.session_state.break_mode = False
+            timer_display.markdown(
+                f"<div class='break-banner'> BREAK OVER! TIME TO LOCK BACK IN.</div><h1 style='font-size: 70px; font-weight: 200; text-align: center; color: {active_theme['accent']};'>00:00:00</h1>", 
+                unsafe_allow_html=True
+            )
+            st.balloons()
+            break
+        else:
+            b_mins, b_secs = divmod(int(remaining_break), 60)
+            timer_display.markdown(
+                f"<div class='break-banner' style='background-color: {active_theme['card']}; color: {active_theme['text']};'>☕ Rest Mode Ticking...</div><h1 style='font-size: 70px; font-weight: 200; text-align: center; color: {active_theme['text']};'>{0:02d}:{b_mins:02d}:{b_secs:02d}</h1>", 
+                unsafe_allow_html=True
+            )
+    else:
+        # --- REGULAR STUDY SYSTEM RUN ---
+        current_elapsed = time.time() - st.session_state.start_time
+        hours, remainder = divmod(int(current_elapsed), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        
+        timer_display.markdown(
+            f"<h1 style='font-size: 70px; font-weight: 200; text-align: center; color: {active_theme['text']};'>{hours:02d}:{minutes:02d}:{seconds:02d}</h1>", 
             unsafe_allow_html=True
         )
-    else:
-        break_display.empty()
+        
+        current_total_minutes = int(current_elapsed // 60)
+        
+        if current_total_minutes > 0 and current_total_minutes % quote_interval == 0:
+            quote_idx = (current_total_minutes // quote_interval) % len(MOTIVATIONAL_QUOTES)
+            quote_display.markdown(
+                f"<div class='quote-box'><b>From a woman who built her empire:</b><br>{MOTIVATIONAL_QUOTES[quote_idx]}</div>", 
+                unsafe_allow_html=True
+            )
+        else:
+            quote_display.empty()
+            
+        if current_total_minutes > 0 and current_total_minutes % break_interval == 0:
+            break_idx = (current_total_minutes // break_interval) % len(BREAK_ACTIVITIES)
+            break_display.markdown(
+                f"<div class='break-box'><b>☕ Time to reset:</b><br>{BREAK_ACTIVITIES[break_idx]}</div>", 
+                unsafe_allow_html=True
+            )
+        else:
+            break_display.empty()
 
     time.sleep(1)
     st.rerun()
 
-# Static Display
-if not st.session_state.running:
+# Static Display fallback state container
+if not st.session_state.running and not st.session_state.break_mode:
     hours, remainder = divmod(int(st.session_state.elapsed_time), 3600)
     minutes, seconds = divmod(remainder, 60)
     timer_display.markdown(
