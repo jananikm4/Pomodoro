@@ -212,7 +212,7 @@ BREAK_ACTIVITIES = [
 ]
 
 # --- APP INTERFACE ---
-st.markdown("<h1 class='main-title'>🥀 Study ritual.</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-title'>🥀 Study time!</h1>", unsafe_allow_html=True)
 st.markdown("<p class='sub-lyrics'>I ain't never had a doubt inside me • And if I ever told you that I did, I'm fuckin' lyin'</p>", unsafe_allow_html=True)
 
 # Session Total Accumulator Card Calculation
